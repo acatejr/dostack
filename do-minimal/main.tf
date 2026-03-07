@@ -1,0 +1,31 @@
+terraform {
+  required_providers {
+    digitalocean = {
+      source  = "digitalocean/digitalocean"
+      version = "~> 2.0"
+    }
+  }
+}
+
+provider "digitalocean" {
+  token = var.do_token
+}
+
+resource "digitalocean_droplet" "vm" {
+  name   = var.droplet_name
+  region = var.region
+  size   = var.size
+  image  = var.image
+
+  ssh_keys = [
+    var.ssh_key_fingerprint
+  ]
+
+  user_data = <<-EOF
+    #!/bin/bash
+    export DEBIAN_FRONTEND=noninteractive
+    apt-get update -y
+    apt-get upgrade -y
+    apt-get install -y build-essential neofetch
+  EOF
+}
