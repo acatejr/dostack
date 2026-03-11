@@ -1,4 +1,6 @@
 terraform {
+  required_version = ">= 1.0"
+
   required_providers {
     digitalocean = {
       source  = "digitalocean/digitalocean"
@@ -11,21 +13,12 @@ provider "digitalocean" {
   token = var.do_token
 }
 
-resource "digitalocean_droplet" "vm" {
+resource "digitalocean_droplet" "dev" {
   name   = var.droplet_name
   region = var.region
   size   = var.size
   image  = var.image
 
-  ssh_keys = [
-    var.ssh_key_fingerprint
-  ]
-
-  user_data = <<-EOF
-    #!/bin/bash
-    export DEBIAN_FRONTEND=noninteractive
-    apt-get update -y
-    apt-get upgrade -y
-    apt-get install -y build-essential neofetch
-  EOF
+  ssh_keys  = [var.ssh_key_fingerprint]
 }
+
